@@ -23,7 +23,7 @@ def create_blog_post(service, blog_id, title, content):
 
 # Function to generate content using textgenrnn
 def generate_content(prompt):
-    textgen = textgenrnn.TextgenRnn()
+    textgen = textgenrnn.TextgenRnn()  # Ensure this uses a single GPU or CPU
     generated_texts = textgen.generate(return_as_list=True, max_gen_length=300)
     return generated_texts[0]
 
