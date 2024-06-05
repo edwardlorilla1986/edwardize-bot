@@ -1,4 +1,5 @@
-textgenrnn
+textgenrnn==1.4.1
+tensorflow==2.3.0
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
