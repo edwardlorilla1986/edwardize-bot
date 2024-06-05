@@ -1,6 +1,4 @@
-textgenrnn==1.4.1
-tensorflow==2.12
-keras==2.12
+transformers
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
