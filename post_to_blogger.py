@@ -1,36 +1,36 @@
-name: Post to Blogger
+import os
+from transformers import pipeline
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+import json
 
-on:
-  schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight
-  workflow_dispatch:
+# Function to authenticate and get the service
+def get_blogger_service():
+    creds = service_account.Credentials.from_service_account_info(
+        json.loads(os.getenv('CLIENT_SECRET_JSON')),
+        scopes=['https://www.googleapis.com/auth/blogger']
+    )
+    service = build('blogger', 'v3', credentials=creds)
+    return service
 
-jobs:
-  post_to_blogger:
-    runs-on: ubuntu-latest
+# Function to create a blog post
+def create_blog_post(service, blog_id, title, content):
+    post = {
+        'title': title,
+        'content': content
+    }
+    service.posts().insert(blogId=blog_id, body=post).execute()
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+# Function to generate content using GPT-2
+def generate_content(prompt):
+    generator = pipeline('text-generation', model='gpt2')
+    generated_text = generator(prompt, max_length=300, num_return_sequences=1)[0]['generated_text']
+    return generated_text
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install tensorflow==2.16.1 keras textgenrnn==1.4.1 google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-
-    - name: Modify textgenrnn to remove multi_gpu_model import
-      run: |
-        python -c "import os, textgenrnn; path = os.path.join(os.path.dirname(textgenrnn.__file__), 'textgenrnn.py'); print(path)"
-        sed -i 's/from tensorflow.keras.utils import multi_gpu_model/# from tensorflow.keras.utils import multi_gpu_model/' $(python -c "import os, textgenrnn; print(os.path.join(os.path.dirname(textgenrnn.__file__), 'textgenrnn.py'))")
-
-    - name: Generate and post content
-      env:
-        BLOG_ID: ${{ secrets.BLOG_ID }}
-        CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
-      run: |
-        python post_to_blogger.py
+if __name__ == '__main__':
+    service = get_blogger_service()
+    blog_id = os.getenv('BLOG_ID')
+    title = 'Automated Blog Post'
+    prompt = 'Write a blog post about the latest trends in technology.'
+    content = generate_content(prompt)
+    create_blog_post(service, blog_id, title, content)
