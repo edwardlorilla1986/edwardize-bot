@@ -24,7 +24,6 @@ def create_blog_post(service, blog_id, title, content):
 # Function to generate content using textgenrnn
 def generate_content(prompt):
     textgen = textgenrnn.TextgenRnn()
-    # Here you can optionally train or load a pre-trained model
     generated_texts = textgen.generate(return_as_list=True, max_gen_length=300)
     return generated_texts[0]
 
