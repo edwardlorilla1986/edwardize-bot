@@ -26,8 +26,8 @@ def create_blog_post(service, blog_id, title, content):
 
 # Function to generate content using Hugging Face's Transformers
 def generate_content(prompt):
-    generator = pipeline('text-generation', model='gpt2')
-    response = generator(prompt, max_length=300)
+    generator = pipeline('text-generation', model='gpt2', truncation=True)
+    response = generator(prompt, max_length=300, pad_token_id=50256)
     return response[0]['generated_text']
 
 if __name__ == '__main__':
