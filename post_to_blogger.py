@@ -40,6 +40,6 @@ if __name__ == '__main__':
     service = get_blogger_service()
     blog_id = os.getenv('BLOG_ID')
     title = generate_content('Write a blog post about the latest trends in technology title')
-    prompt = 'Write a blog post about the latest trends in technology.'
+    prompt = 'Write a blog post about the latest trends in technology with 10000 words'
     content = generate_content(prompt)
     create_blog_post(service, blog_id, title, content)
