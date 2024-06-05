@@ -39,7 +39,7 @@ def generate_content(prompt):
 if __name__ == '__main__':
     service = get_blogger_service()
     blog_id = os.getenv('BLOG_ID')
-    title = 'Automated Blog Post'
+    title = generate_content('Write a blog post about the latest trends in technology title')
     prompt = 'Write a blog post about the latest trends in technology.'
     content = generate_content(prompt)
     create_blog_post(service, blog_id, title, content)
