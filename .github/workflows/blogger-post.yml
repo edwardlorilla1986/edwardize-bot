@@ -25,6 +25,7 @@ jobs:
 
     - name: Modify textgenrnn to remove multi_gpu_model import
       run: |
+        python -c "import os, textgenrnn; path = os.path.join(os.path.dirname(textgenrnn.__file__), 'textgenrnn.py'); print(path)"
         sed -i 's/from tensorflow.keras.utils import multi_gpu_model/# from tensorflow.keras.utils import multi_gpu_model/' $(python -c "import os, textgenrnn; print(os.path.join(os.path.dirname(textgenrnn.__file__), 'textgenrnn.py'))")
 
     - name: Generate and post content
