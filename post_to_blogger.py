@@ -1,27 +1,18 @@
 import os
-import pickle
 from transformers import pipeline
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
+import json
 
 # Define the scopes
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # Function to authenticate and get the service
 def get_blogger_service():
-    creds = None
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES, redirect_uri='http://localhost:8080/oauth2callback')
-            creds = flow.run_local_server(port=8080)
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+    creds = service_account.Credentials.from_service_account_info(
+        json.loads(os.getenv('CLIENT_SECRET_JSON')),
+        scopes=SCOPES
+    )
     service = build('blogger', 'v3', credentials=creds)
     return service
 
@@ -41,7 +32,7 @@ def generate_content(prompt):
 
 if __name__ == '__main__':
     service = get_blogger_service()
-    blog_id = '4130967425501379336'
+    blog_id = os.getenv('BLOG_ID')
     title = 'Automated Blog Post'
     prompt = 'Write a blog post about the latest trends in technology.'
     content = generate_content(prompt)
