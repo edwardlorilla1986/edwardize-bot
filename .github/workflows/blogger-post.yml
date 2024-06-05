@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install tensorflow==2.16.1 textgenrnn==1.4.1 google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+        pip install tensorflow==2.16.1 keras textgenrnn==1.4.1 google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 
     - name: Modify textgenrnn to remove multi_gpu_model import
       run: |
