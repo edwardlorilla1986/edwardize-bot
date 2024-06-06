@@ -1,36 +1,16 @@
 import os
-import pickle
-import base64
 from transformers import pipeline
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # Define the scopes
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 def get_blogger_service():
-    creds = None
-    token_pickle_base64 = os.getenv('TOKEN_PICKLE')
-    
-    if token_pickle_base64:
-        token_pickle = base64.b64decode(token_pickle_base64)
-        creds = pickle.loads(token_pickle)
-    
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
-            auth_url, _ = flow.authorization_url(prompt='consent')
-            print(f'Please go to this URL: {auth_url}')
-            code = input('Enter the authorization code: ')
-            flow.fetch_token(code=code)
-            creds = flow.credentials
-        with open('token.pickle', 'wb') as token_file:
-            pickle.dump(creds, token_file)
-        os.environ['TOKEN_PICKLE'] = base64.b64encode(pickle.dumps(creds)).decode('utf-8')
-        
+    creds = service_account.Credentials.from_service_account_file(
+        'service-account-file.json', 
+        scopes=SCOPES
+    )
     service = build('blogger', 'v3', credentials=creds)
     return service
 
