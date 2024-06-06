@@ -1,6 +1,5 @@
 import os
 import pickle
-import random
 from transformers import pipeline
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -8,19 +7,6 @@ from googleapiclient.discovery import build
 
 # Define the scopes
 SCOPES = ['https://www.googleapis.com/auth/blogger']
-
-# Define a list of topics
-TOPICS = [
-    "Politics in the Philippines", "Tourism in the Philippines", "Philippine festivals",
-    "Global economy trends", "Climate change impact", "International relations",
-    "Community events", "Local government initiatives", "Neighborhood news",
-    "Startup trends", "Investment strategies", "Market analysis",
-    "AI advancements", "Cybersecurity threats", "Latest gadgets",
-    "Movie reviews", "Celebrity news", "Music trends",
-    "Major sporting events", "Athlete profiles", "Fitness tips",
-    "Space exploration", "Scientific discoveries", "Technological innovations",
-    "Mental health awareness", "Fitness and wellness", "Medical breakthroughs"
-]
 
 def get_blogger_service():
     creds = None
@@ -45,24 +31,15 @@ def create_blog_post(service, blog_id, title, content):
     }
     service.posts().insert(blogId=blog_id, body=post).execute()
 
-def generate_content(prompt, max_length=300, num_segments=4):
+def generate_content(prompt):
     generator = pipeline('text-generation', model='gpt2', truncation=True)
-    content = ""
-    for _ in range(num_segments):
-        response = generator(prompt, max_length=max_length, pad_token_id=50256)
-        content += response[0]['generated_text'] + "\n\n"
-    return content
-
-def choose_random_topic():
-    topic = random.choice(TOPICS)
-    return topic
+    response = generator(prompt, max_length=300, pad_token_id=50256)
+    return response[0]['generated_text']
 
 if __name__ == '__main__':
     service = get_blogger_service()
     blog_id = os.getenv('BLOG_ID')
-    topic = choose_random_topic()
-    title_prompt = f'Create an engaging title for a blog post about {topic}'
-    content_prompt = f'Write a detailed blog post about {topic}'
-    title = generate_content(title_prompt, max_length=50, num_segments=1).strip()
-    content = generate_content(content_prompt, max_length=300, num_segments=4).strip()
+    title = generate_content('Write a blog post about the latest trends in technology title')
+    prompt = 'Write a blog post about the latest trends in technology.'
+    content = generate_content(prompt)
     create_blog_post(service, blog_id, title, content)
