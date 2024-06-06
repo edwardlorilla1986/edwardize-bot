@@ -18,7 +18,11 @@ def get_blogger_service():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
-            creds = flow.run_local_server(port=8080)  # Changed port to a non-default value
+            auth_url, _ = flow.authorization_url(prompt='consent')
+            print(f'Please go to this URL: {auth_url}')
+            code = input('Enter the authorization code: ')
+            flow.fetch_token(code=code)
+            creds = flow.credentials
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
     service = build('blogger', 'v3', credentials=creds)
