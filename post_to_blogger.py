@@ -18,7 +18,7 @@ def get_blogger_service():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_console()  # Changed from run_local_server to run_console
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
     service = build('blogger', 'v3', credentials=creds)
@@ -39,7 +39,8 @@ def generate_content(prompt):
 if __name__ == '__main__':
     service = get_blogger_service()
     blog_id = os.getenv('BLOG_ID')
-    title = generate_content('Write a blog post about the latest trends in technology title')
+    title_prompt = 'Write a blog post about the latest trends in technology title'
+    title = generate_content(title_prompt)
     prompt = 'Write a blog post about the latest trends in technology.'
     content = generate_content(prompt)
     create_blog_post(service, blog_id, title, content)
