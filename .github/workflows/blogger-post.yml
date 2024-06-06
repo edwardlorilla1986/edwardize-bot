@@ -1,4 +1,4 @@
-name: Post to Blogger
+name: Send Email with Generated Content
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  post_to_blogger:
+  send-email:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,11 +21,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install torch transformers google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+        pip install torch transformers
 
-    - name: Generate and post content
+    - name: Send Email
       env:
-        BLOG_ID: ${{ secrets.BLOG_ID }}
-        CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
+        EMAIL: ${{ secrets.EMAIL }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        TO_EMAIL: ${{ secrets.TO_EMAIL }}
       run: |
-        python post_to_blogger.py
+        python send_email.py
