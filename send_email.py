@@ -30,10 +30,10 @@ def generate_content(prompt):
     return response[0]['generated_text']
 
 if __name__ == '__main__':
-    title_prompt = 'poem title'
-    title = generate_content(title_prompt).strip()
     prompt = 'Write a poem'
-    content = generate_content(prompt).strip()
+    poems = [generate_content(prompt).strip() for _ in range(10)]
+    content = "\n\n".join(poems)
+    title = "Generated Poems Collection"
     
     to_email = os.getenv('TO_EMAIL')
     send_email(title, content, to_email)
