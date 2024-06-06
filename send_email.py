@@ -30,9 +30,9 @@ def generate_content(prompt):
     return response[0]['generated_text']
 
 if __name__ == '__main__':
-    title_prompt = 'Write a blog post about the latest trends in technology title'
+    title_prompt = 'poem title'
     title = generate_content(title_prompt).strip()
-    prompt = 'Write a blog post about the latest trends in technology.'
+    prompt = 'Write a poem'
     content = generate_content(prompt).strip()
     
     to_email = os.getenv('TO_EMAIL')
