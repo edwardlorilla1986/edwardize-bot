@@ -1,7 +1,7 @@
 import os
 import smtplib
 import logging
-import openai
+from openai import OpenAI
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from transformers import pipeline
@@ -10,9 +10,11 @@ from transformers import pipeline
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set up OpenAI API key
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
+# Set up OpenAI API ke
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key= os.getenv('OPENAI_API_KEY')
+)
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
     email_password = os.getenv('EMAIL_PASSWORD')
@@ -43,7 +45,7 @@ def send_email(subject, body, to_email):
 
 def generate_content(prompt, max_tokens=300):
     try:
-        response = openai.ChatCompletion.create(
+        response = chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens
