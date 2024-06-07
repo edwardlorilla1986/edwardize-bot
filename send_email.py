@@ -41,12 +41,12 @@ def send_email(subject, body, to_email):
     except Exception as e:
         logger.error(f'Failed to send email: {e}')
 
-def generate_content(prompt):
+def generate_content(prompt, max_tokens=300):
     try:
         response = openai.Completion.create(
-            engine="gpt-4",  # Specify GPT-4 engine
+            engine="gpt-4",
             prompt=prompt,
-            max_tokens=300
+            max_tokens=max_tokens
         )
         return response.choices[0].text.strip()
     except Exception as e:
@@ -54,17 +54,19 @@ def generate_content(prompt):
         logger.info('Falling back to transformers.')
         try:
             generator = pipeline('text-generation', model='gpt2', truncation=True)
-            response = generator(prompt, max_length=300, pad_token_id=50256)
+            response = generator(prompt, max_length=max_tokens, pad_token_id=50256)
             return response[0]['generated_text']
         except Exception as e:
             logger.error(f'Transformers error: {e}')
             return "Content generation failed."
 
 if __name__ == '__main__':
-    prompt = 'Write a poem'
-    poems = [generate_content(prompt).strip() for _ in range(10)]
+    poem_prompt = 'Write a poem'
+    poems = [generate_content(poem_prompt).strip() for _ in range(10)]
     content = "\n\n".join(poems)
-    title = "Generated Poems Collection"
+    
+    title_prompt = 'Generate a title for a collection of poems'
+    title = generate_content(title_prompt, max_tokens=10)  # Shorter max_tokens for title generation
     
     to_email = os.getenv('TO_EMAIL')
     if not to_email:
