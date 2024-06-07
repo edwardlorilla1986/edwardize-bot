@@ -1,12 +1,25 @@
 import os
 import smtplib
+import openai
+import logging
 from transformers import pipeline
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Set up OpenAI API key
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
     email_password = os.getenv('EMAIL_PASSWORD')
+    
+    if not from_email or not email_password:
+        logger.error('Email credentials are not set in the environment variables.')
+        return
     
     # Create the email message
     msg = MIMEMultipart()
@@ -15,19 +28,37 @@ def send_email(subject, body, to_email):
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     
-    # Set up the SMTP server
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(from_email, email_password)
-    
-    # Send the email
-    server.send_message(msg)
-    server.quit()
+    try:
+        # Set up the SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(from_email, email_password)
+        
+        # Send the email
+        server.send_message(msg)
+        server.quit()
+        logger.info(f'Email sent successfully to {to_email}')
+    except Exception as e:
+        logger.error(f'Failed to send email: {e}')
 
 def generate_content(prompt):
-    generator = pipeline('text-generation', model='gpt2', truncation=True)
-    response = generator(prompt, max_length=300, pad_token_id=50256)
-    return response[0]['generated_text']
+    try:
+        response = openai.Completion.create(
+            engine="gpt-4",  # Specify GPT-4 engine
+            prompt=prompt,
+            max_tokens=300
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        logger.error(f'OpenAI error: {e}')
+        logger.info('Falling back to transformers.')
+        try:
+            generator = pipeline('text-generation', model='gpt2', truncation=True)
+            response = generator(prompt, max_length=300, pad_token_id=50256)
+            return response[0]['generated_text']
+        except Exception as e:
+            logger.error(f'Transformers error: {e}')
+            return "Content generation failed."
 
 if __name__ == '__main__':
     prompt = 'Write a poem'
@@ -36,4 +67,7 @@ if __name__ == '__main__':
     title = "Generated Poems Collection"
     
     to_email = os.getenv('TO_EMAIL')
-    send_email(title, content, to_email)
+    if not to_email:
+        logger.error('Recipient email is not set in the environment variables.')
+    else:
+        send_email(title, content, to_email)
