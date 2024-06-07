@@ -58,7 +58,9 @@ if __name__ == '__main__':
         os.getenv('TO_EMAIL1'), 
         os.getenv('TO_EMAIL2'), 
         os.getenv('TO_EMAIL3'), 
-        os.getenv('TO_EMAIL4'),os.getenv('TO_EMAIL5')
+        os.getenv('TO_EMAIL4'),
+        os.getenv('TO_EMAIL5'),
+        os.getenv('TO_EMAIL6')
     ]
 
     # Filter out any None values in case some email environment variables are not set
