@@ -45,7 +45,7 @@ def send_email(subject, body, to_email):
 
 def generate_content(prompt, max_tokens=300):
     try:
-        response = chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens
