@@ -68,11 +68,11 @@ if __name__ == '__main__':
         logger.error('No recipient emails are set in the environment variables.')
     else:
         for idx, to_email in enumerate(email_list, start=1):
-            poem_prompt = f'Write poem {idx}'
+            poem_prompt = f'Write affiliate marketing {idx}'
             poems = [generate_content(poem_prompt).strip() for _ in range(10)]
             content = "\n\n".join(poems)
             
-            title_prompt = f'Generate a title for a collection of poems {idx}'
+            title_prompt = f'Generate a title for a collection of affiliate marketing {idx}'
             title = generate_content(title_prompt, max_tokens=90)  # Shorter max_tokens for title generation
             
             send_email(title, content, to_email)
