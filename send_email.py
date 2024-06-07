@@ -43,12 +43,12 @@ def send_email(subject, body, to_email):
 
 def generate_content(prompt, max_tokens=300):
     try:
-        response = openai.Completion.create(
-            engine="gpt-4",
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens
         )
-        return response.choices[0].text.strip()
+        return response['choices'][0]['message']['content'].strip()
     except Exception as e:
         logger.error(f'OpenAI error: {e}')
         logger.info('Falling back to transformers.')
