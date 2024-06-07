@@ -66,6 +66,7 @@ if __name__ == '__main__':
     to_email1 = os.getenv('TO_EMAIL1')
     to_email2 = os.getenv('TO_EMAIL2')
     to_email3 = os.getenv('TO_EMAIL3')
+    to_email4 = os.getenv('TO_EMAIL4')
     if not to_email1 or not to_email2:
         logger.error('Recipient emails are not set in the environment variables.')
     else:
@@ -98,3 +99,13 @@ if __name__ == '__main__':
         title3 = generate_content(title_prompt3, max_tokens=90)  # Shorter max_tokens for title generation
         
         send_email(title3, content3, to_email3)
+
+        # Second email
+        poem_prompt4 = 'Write another poem'
+        poems4 = [generate_content(poem_prompt4).strip() for _ in range(10)]
+        content4 = "\n\n".join(poems4)
+        
+        title_prompt4 = 'Generate a different title for another collection of poems'
+        title4 = generate_content(title_prompt4, max_tokens=90)  # Shorter max_tokens for title generation
+        
+        send_email(title4, content4, to_email4)
