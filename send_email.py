@@ -1,10 +1,10 @@
 import os
 import smtplib
-import openai
 import logging
-from transformers import pipeline
+import openai
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from transformers import pipeline
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +44,7 @@ def send_email(subject, body, to_email):
 def generate_content(prompt, max_tokens=300):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens
         )
