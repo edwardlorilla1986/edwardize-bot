@@ -64,11 +64,11 @@ def generate_content(prompt, max_tokens=300):
 
 if __name__ == '__main__':
     poem_prompt = 'Write a poem'
-    poems = [generate_content(poem_prompt).strip() for _ in range(10)]
+    poems = [generate_content(poem_prompt).strip() for _ in range(100)]
     content = "\n\n".join(poems)
     
     title_prompt = 'Generate a title for a collection of poems'
-    title = generate_content(title_prompt, max_tokens=10)  # Shorter max_tokens for title generation
+    title = generate_content(title_prompt, max_tokens=90)  # Shorter max_tokens for title generation
     
     to_email = os.getenv('TO_EMAIL')
     if not to_email:
