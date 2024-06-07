@@ -45,22 +45,12 @@ def send_email(subject, body, to_email):
 
 def generate_content(prompt, max_tokens=300):
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=max_tokens
-        )
-        return response['choices'][0]['message']['content'].strip()
+        generator = pipeline('text-generation', model='gpt2', truncation=True)
+        response = generator(prompt, max_length=max_tokens, pad_token_id=50256)
+        return response[0]['generated_text']
     except Exception as e:
-        logger.error(f'OpenAI error: {e}')
-        logger.info('Falling back to transformers.')
-        try:
-            generator = pipeline('text-generation', model='gpt2', truncation=True)
-            response = generator(prompt, max_length=max_tokens, pad_token_id=50256)
-            return response[0]['generated_text']
-        except Exception as e:
-            logger.error(f'Transformers error: {e}')
-            return "Content generation failed."
+        logger.error(f'Transformers error: {e}')
+        return "Content generation failed."
 
 if __name__ == '__main__':
     # List of recipient emails
