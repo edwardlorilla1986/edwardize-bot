@@ -10,11 +10,11 @@ from transformers import pipeline
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set up OpenAI API ke
+# Set up OpenAI API key
 client = OpenAI(
-    # This is the default and can be omitted
-    api_key= os.getenv('OPENAI_API_KEY')
+    api_key=os.getenv('OPENAI_API_KEY')
 )
+
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
     email_password = os.getenv('EMAIL_PASSWORD')
@@ -63,15 +63,28 @@ def generate_content(prompt, max_tokens=300):
             return "Content generation failed."
 
 if __name__ == '__main__':
-    poem_prompt = 'Write a poem'
-    poems = [generate_content(poem_prompt).strip() for _ in range(100)]
-    content = "\n\n".join(poems)
+    to_email1 = os.getenv('TO_EMAIL1')
+    to_email2 = os.getenv('TO_EMAIL2')
     
-    title_prompt = 'Generate a title for a collection of poems'
-    title = generate_content(title_prompt, max_tokens=90)  # Shorter max_tokens for title generation
-    
-    to_email = os.getenv('TO_EMAIL')
-    if not to_email:
-        logger.error('Recipient email is not set in the environment variables.')
+    if not to_email1 or not to_email2:
+        logger.error('Recipient emails are not set in the environment variables.')
     else:
-        send_email(title, content, to_email)
+        # First email
+        poem_prompt1 = 'Write a poem'
+        poems1 = [generate_content(poem_prompt1).strip() for _ in range(10)]
+        content1 = "\n\n".join(poems1)
+        
+        title_prompt1 = 'Generate a title for a collection of poems'
+        title1 = generate_content(title_prompt1, max_tokens=90)  # Shorter max_tokens for title generation
+        
+        send_email(title1, content1, to_email1)
+        
+        # Second email
+        poem_prompt2 = 'Write another poem'
+        poems2 = [generate_content(poem_prompt2).strip() for _ in range(10)]
+        content2 = "\n\n".join(poems2)
+        
+        title_prompt2 = 'Generate a different title for another collection of poems'
+        title2 = generate_content(title_prompt2, max_tokens=90)  # Shorter max_tokens for title generation
+        
+        send_email(title2, content2, to_email2)
