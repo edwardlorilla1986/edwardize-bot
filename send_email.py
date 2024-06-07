@@ -44,7 +44,7 @@ def send_email(subject, body, to_email):
 def generate_content(prompt, max_tokens=300):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens
         )
