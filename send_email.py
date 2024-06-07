@@ -63,49 +63,26 @@ def generate_content(prompt, max_tokens=300):
             return "Content generation failed."
 
 if __name__ == '__main__':
-    to_email1 = os.getenv('TO_EMAIL1')
-    to_email2 = os.getenv('TO_EMAIL2')
-    to_email3 = os.getenv('TO_EMAIL3')
-    to_email4 = os.getenv('TO_EMAIL4')
-    if not to_email1 or not to_email2:
-        logger.error('Recipient emails are not set in the environment variables.')
+    # List of recipient emails
+    email_list = [
+        os.getenv('TO_EMAIL1'), 
+        os.getenv('TO_EMAIL2'), 
+        os.getenv('TO_EMAIL3'), 
+        os.getenv('TO_EMAIL4')
+    ]
+
+    # Filter out any None values in case some email environment variables are not set
+    email_list = [email for email in email_list if email]
+
+    if not email_list:
+        logger.error('No recipient emails are set in the environment variables.')
     else:
-        # First email
-        poem_prompt1 = 'Write a poem'
-        poems1 = [generate_content(poem_prompt1).strip() for _ in range(10)]
-        content1 = "\n\n".join(poems1)
-        
-        title_prompt1 = 'Generate a title for a collection of poems'
-        title1 = generate_content(title_prompt1, max_tokens=90)  # Shorter max_tokens for title generation
-        
-        send_email(title1, content1, to_email1)
-        
-        # Second email
-        poem_prompt2 = 'Write another poem'
-        poems2 = [generate_content(poem_prompt2).strip() for _ in range(10)]
-        content2 = "\n\n".join(poems2)
-        
-        title_prompt2 = 'Generate a different title for another collection of poems'
-        title2 = generate_content(title_prompt2, max_tokens=90)  # Shorter max_tokens for title generation
-        
-        send_email(title2, content2, to_email2)
-
-        # Second email
-        poem_prompt3 = 'Write another poem'
-        poems3 = [generate_content(poem_prompt3).strip() for _ in range(10)]
-        content3 = "\n\n".join(poems3)
-        
-        title_prompt3 = 'Generate a different title for another collection of poems'
-        title3 = generate_content(title_prompt3, max_tokens=90)  # Shorter max_tokens for title generation
-        
-        send_email(title3, content3, to_email3)
-
-        # Second email
-        poem_prompt4 = 'Write another poem'
-        poems4 = [generate_content(poem_prompt4).strip() for _ in range(10)]
-        content4 = "\n\n".join(poems4)
-        
-        title_prompt4 = 'Generate a different title for another collection of poems'
-        title4 = generate_content(title_prompt4, max_tokens=90)  # Shorter max_tokens for title generation
-        
-        send_email(title4, content4, to_email4)
+        for idx, to_email in enumerate(email_list, start=1):
+            poem_prompt = f'Write poem {idx}'
+            poems = [generate_content(poem_prompt).strip() for _ in range(10)]
+            content = "\n\n".join(poems)
+            
+            title_prompt = f'Generate a title for a collection of poems {idx}'
+            title = generate_content(title_prompt, max_tokens=90)  # Shorter max_tokens for title generation
+            
+            send_email(title, content, to_email)
