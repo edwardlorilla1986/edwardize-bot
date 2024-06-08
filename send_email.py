@@ -60,6 +60,7 @@ if __name__ == '__main__':
     email_list = [
         os.getenv('TO_EMAIL10'), 
         os.getenv('TO_EMAIL11'), 
+        os.getenv('TO_EMAIL12'), 
         os.getenv('TO_EMAIL1'),
         os.getenv('TO_EMAIL8'), 
         os.getenv('TO_EMAIL9'), 
