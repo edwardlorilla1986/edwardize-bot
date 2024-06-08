@@ -66,6 +66,7 @@ if __name__ == '__main__':
         os.getenv('TO_EMAIL15'), 
         os.getenv('TO_EMAIL16'), 
         os.getenv('TO_EMAIL17'), 
+        os.getenv('TO_EMAIL18'), 
         os.getenv('TO_EMAIL1'),
         os.getenv('TO_EMAIL8'), 
         os.getenv('TO_EMAIL9'), 
