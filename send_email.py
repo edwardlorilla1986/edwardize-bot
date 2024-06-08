@@ -58,6 +58,7 @@ def sanitize_title(title):
 if __name__ == '__main__':
     # List of recipient emails
     email_list = [
+        os.getenv('TO_EMAIL10'), 
         os.getenv('TO_EMAIL1'),
         os.getenv('TO_EMAIL8'), 
         os.getenv('TO_EMAIL9'), 
