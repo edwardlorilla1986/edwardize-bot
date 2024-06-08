@@ -57,7 +57,17 @@ def sanitize_title(title):
 
 if __name__ == '__main__':
     # List of recipient emails
-    email_list = [os.getenv('TO_EMAIL1'), os.getenv('TO_EMAIL8'), os.getenv('TO_EMAIL9'), os.getenv('TO_EMAIL7'), os.getenv('TO_EMAIL2'), os.getenv('TO_EMAIL3'), os.getenv('TO_EMAIL4'), os.getenv('TO_EMAIL5'), os.getenv('TO_EMAIL6') ]
+    email_list = [
+        os.getenv('TO_EMAIL1'),
+        os.getenv('TO_EMAIL8'), 
+        os.getenv('TO_EMAIL9'), 
+        os.getenv('TO_EMAIL7'), 
+        os.getenv('TO_EMAIL2'), 
+        os.getenv('TO_EMAIL3'), 
+        os.getenv('TO_EMAIL4'), 
+        os.getenv('TO_EMAIL5'), 
+        os.getenv('TO_EMAIL6') 
+    ]
 
     # Filter out any None values in case some email environment variables are not set
     email_list = [email for email in email_list if email]
