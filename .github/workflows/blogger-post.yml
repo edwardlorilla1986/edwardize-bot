@@ -43,6 +43,7 @@ jobs:
         TO_EMAIL13: ${{ secrets.TO_EMAIL13 }}
         TO_EMAIL14: ${{ secrets.TO_EMAIL14 }}
         TO_EMAIL15: ${{ secrets.TO_EMAIL15 }}
+        TO_EMAIL16: ${{ secrets.TO_EMAIL16 }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         python send_email.py
