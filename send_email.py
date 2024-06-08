@@ -45,22 +45,12 @@ def send_email(subject, body, to_email):
 
 def generate_content(prompt, max_tokens=300):
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=max_tokens
-        )
-        return response['choices'][0]['message']['content'].strip()
+        generator = pipeline('text-generation', model='gpt2', truncation=True)
+        response = generator(prompt, max_length=max_tokens, pad_token_id=50256)
+        return response[0]['generated_text']
     except Exception as e:
-        logger.error(f'OpenAI error: {e}')
-        logger.info('Falling back to transformers.')
-        try:
-            generator = pipeline('text-generation', model='gpt2', truncation=True)
-            response = generator(prompt, max_length=max_tokens, pad_token_id=50256)
-            return response[0]['generated_text']
-        except Exception as e:
-            logger.error(f'Transformers error: {e}')
-            return "Content generation failed."
+        logger.error(f'Transformers error: {e}')
+        return "Content generation failed."
 
 def sanitize_title(title):
     return ''.join(char for char in title if char.isalnum() or char.isspace()).strip()
@@ -77,12 +67,12 @@ if __name__ == '__main__':
     else:
         for idx, to_email in enumerate(email_list, start=1):
             # Generate poem content
-            poem_prompt = f'Write a poem {idx}'
+            poem_prompt = f'Write a affiliate marketing {idx}'
             poems = [generate_content(poem_prompt).strip() for _ in range(10)]
             content = "\n\n".join(poems)
             
             # Generate catchy title
-            title_prompt = f'Generate a catchy title for a collection of poems {idx}'
+            title_prompt = f'Generate a catchy title for a collection of affiliate marketing {idx}'
             title = generate_content(title_prompt, max_tokens=90)  # Shorter max_tokens for title generation
             
             # Sanitize title
