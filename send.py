@@ -1,7 +1,6 @@
 import os
 import smtplib
 import logging
-from openai import OpenAI
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from transformers import pipeline
@@ -10,8 +9,6 @@ from transformers import pipeline
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set up OpenAI API key
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
