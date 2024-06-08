@@ -40,6 +40,7 @@ jobs:
         TO_EMAIL10: ${{ secrets.TO_EMAIL10 }}
         TO_EMAIL11: ${{ secrets.TO_EMAIL11 }}
         TO_EMAIL12: ${{ secrets.TO_EMAIL12 }}
+        TO_EMAIL13: ${{ secrets.TO_EMAIL13 }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         python send_email.py
