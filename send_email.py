@@ -14,7 +14,19 @@ logger = logging.getLogger(__name__)
 client = OpenAI(
     api_key=os.getenv('OPENAI_API_KEY')
 )
-
+url = "https://www.merriam-webster.com/word-of-the-day"
+response = requests.get(url)
+word = ""
+if response.status_code == 200:
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Find the Word of the Day section
+    word_section = soup.find('div', class_='word-and-pronunciation')
+    word = word_section.find('h2').text.strip()
+    
+else:
+    print("Failed to retrieve the Word of the Day")
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
     email_password = os.getenv('EMAIL_PASSWORD')
