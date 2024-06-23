@@ -4,12 +4,25 @@ import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from transformers import pipeline
-
+import requests
+from bs4 import BeautifulSoup
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
+url = "https://www.merriam-webster.com/word-of-the-day"
+response = requests.get(url)
+word = ""
+if response.status_code == 200:
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Find the Word of the Day section
+    word_section = soup.find('div', class_='word-and-pronunciation')
+    word = word_section.find('h2').text.strip()
+    
+else:
+    print("Failed to retrieve the Word of the Day")
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL')
     email_password = os.getenv('EMAIL_PASSWORD')
@@ -57,12 +70,14 @@ if __name__ == '__main__':
     # Filter out any empty strings in case some email environment variables are not set
     email_list = [email.strip() for email in email_list if email.strip()]
 
+    
+    
     if not email_list:
         logger.error('No recipient emails are set in the environment variable TO_EMAILS.')
     else:
         for idx, to_email in enumerate(email_list, start=1):
             # Generate content
-            prompt = f'Write an affiliate marketing {idx}'
+            prompt = f'Write an {word}'
             content = generate_content(prompt).strip()
             
             # Generate catchy title
