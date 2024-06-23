@@ -99,7 +99,7 @@ if __name__ == '__main__':
     else:
         for idx, to_email in enumerate(email_list, start=1):
             # Generate poem content
-            poem_prompt = f'Write a {word} {idx}'
+            poem_prompt = f'Write a {word}'
             poems = [generate_content(poem_prompt).strip() for _ in range(10)]
             content = "\n\n".join(poems)
             
