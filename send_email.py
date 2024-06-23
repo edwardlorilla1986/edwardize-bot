@@ -5,7 +5,8 @@ from openai import OpenAI
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from transformers import pipeline
-
+import requests
+from bs4 import BeautifulSoup
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
