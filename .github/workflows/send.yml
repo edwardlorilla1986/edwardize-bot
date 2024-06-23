@@ -29,6 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install transformers tensorflow
           pip install tf-keras
+          pip install requests beautifulsoup4
           pip install torch torchvision torchaudio
 
       - name: Run send.py
