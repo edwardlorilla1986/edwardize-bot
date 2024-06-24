@@ -81,11 +81,11 @@ if __name__ == '__main__':
             content = generate_content(prompt).strip()
             
             # Generate catchy title
-            title_prompt = f'Generate a catchy title for a collection of affiliate marketing {idx}'
+            title_prompt = f'Generate a catchy title for a collection of {word}'
             title = generate_content(title_prompt, max_tokens=90).strip()
             
             # Sanitize title
             sanitized_title = sanitize_title(title)
             
             # Send email
-            send_email(sanitized_title, content, to_email)
+            send_email(sanitized_title, content + "", to_email)
