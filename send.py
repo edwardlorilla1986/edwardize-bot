@@ -88,4 +88,4 @@ if __name__ == '__main__':
             sanitized_title = sanitize_title(title)
             
             # Send email
-            send_email(sanitized_title, content + "", to_email)
+            send_email(sanitized_title, content  + " https://luminouslaughsco.etsy.com/", to_email)
